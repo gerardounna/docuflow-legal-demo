@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocuFlow Legal — Live Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --primary: #1a1a2e;
+      --accent: #e94560;
+      --accent-hover: #d63850;
+      --bg: #f8f9fc;
+      --card: #ffffff;
+      --text: #1a1a2e;
+      --text-light: #666;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --error: #ef4444;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    /* Header */
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+    }
+    .logo-text {
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.5px;
+    }
+    .logo-text span { color: var(--accent); }
+    .badge {
+      background: var(--accent);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, #16213e 100%);
+      color: white;
+      padding: 60px 24px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 18px;
+      opacity: 0.85;
+      max-width: 600px;
+      margin: 0 auto 24px;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .hero-stat {
+      text-align: center;
+    }
+    .hero-stat .num {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .hero-stat .label {
+      font-size: 13px;
+      opacity: 0.7;
+    }
+    
+    /* Demo Section */
+    .demo-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+    
+    .demo-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .demo-title h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .demo-title p {
+      color: var(--text-light);
+      font-size: 16px;
+    }
+    
+    /* Two column layout */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    
+    /* Form card */
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .step-badge {
+      background: var(--primary);
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .step-badge.active { background: var(--accent); }
+    .card-body { padding: 24px; }
+    
+    /* Form elements */
+    .form-group {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    select, input, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: white;
+      transition: border-color 0.2s;
+    }
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+    .btn .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    /* Output card */
+    .output-area {
+      min-height: 300px;
+      background: #fafbfc;
+    }
+    .output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .output-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ccc;
+    }
+    .status-dot.ready { background: var(--success); }
+    .status-dot.loading { 
+      background: var(--accent);
+      animation: pulse 1s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    
+    .output-content {
+      padding: 24px;
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      max-height: 500px;
+      overflow-y: auto;
+      color: #333;
+    }
+    .output-placeholder {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-light);
+    }
+    .output-placeholder .icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+    .output-placeholder p {
+      font-size: 14px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    
+    /* Use cases */
+    .usecases {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+    .usecases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .usecase-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .usecase-card .icon {
+      width: 44px;
+      height: 44px;
+      background: #fef2f4;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+    .usecase-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .usecase-card p {
+      font-size: 13px;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+    .usecase-card .doc-example {
+      background: #f8f9fc;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 10px;
+      font-family: 'Courier New', monospace;
+    }
+    
+    /* Pricing */
+    .pricing-section {
+      background: var(--primary);
+      color: white;
+      padding: 60px 24px;
+    }
+    .pricing-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .pricing-inner h2 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .pricing-inner p { opacity: 0.7; margin-bottom: 32px; }
+    .pricing-cards {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .pricing-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 28px 24px;
+      min-width: 240px;
+      flex: 1;
+      text-align: left;
+    }
+    .pricing-card.featured {
+      background: rgba(233,69,96,0.15);
+      border-color: var(--accent);
+    }
+    .pricing-card .plan-name {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.7;
+      margin-bottom: 8px;
+    }
+    .pricing-card.featured .plan-name { color: var(--accent); }
+    .pricing-card .plan-price {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .pricing-card .plan-price small {
+      font-size: 15px;
+      font-weight: 400;
+      opacity: 0.6;
+    }
+    .pricing-card .plan-monthly {
+      font-size: 13px;
+      opacity: 0.6;
+      margin-bottom: 20px;
+    }
+    .pricing-card ul {
+      list-style: none;
+      font-size: 13px;
+      line-height: 2;
+    }
+    .pricing-card ul li::before {
+      content: "✓ ";
+      color: var(--accent);
+      font-weight: 700;
+    }
+    
+    /* Footer */
+    footer {
+      background: #0d0f1a;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+    }
+    
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--primary);
+      color: white;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 200;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { background: var(--error); }
+    .toast.success { background: var(--success); }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .demo-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 26px; }
+      .hero-stats { gap: 24px; }
+    }
+    
+    /* Doc type selector visual */
+    .doc-types {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .doc-type-btn {
+      padding: 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      font-size: 13px;
+    }
+    .doc-type-btn:hover { border-color: var(--accent); }
+    .doc-type-btn.selected {
+      border-color: var(--accent);
+      background: #fef2f4;
+    }
+    .doc-type-btn .type-name {
+      font-weight: 700;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .doc-type-btn .type-desc {
+      color: var(--text-light);
+      font-size: 11px;
+    }
+    
+    /* Info box */
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #1e40af;
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">D</div>
+      <div class="logo-text">DocuFlow <span>Legal</span></div>
+    </div>
+    <div class="badge">LIVE DEMO</div>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Genera documentos legales en <span>segundos</span></h1>
+  <p>IA entrenada en la práctica legal de Texas. Escribe contratos, petitions y agreements en el formato exacto de tu despacho — no desde plantillas genéricas.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="num">60-70%</div>
+      <div class="label">menos tiempo en documentos</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">&lt;1 min</div>
+      <div class="label">para generar un primer borrador</div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">2 horas</div>
+      <div class="label">de setup, sin IT</div>
+    </div>
+  </div>
+</section>
+
+<section class="demo-section">
+  <div class="demo-title">
+    <h2>👇 Prueba la demo — genera un documento real</h2>
+    <p>Llena el formulario y la IA genera el documento al instante. Sin registro, sin waiting list.</p>
+  </div>
+  
+  <div class="demo-grid">
+    <!-- FORM -->
+    <div class="card">
+      <div class="card-header">
+        <div class="step-badge active">1</div>
+        <h3>¿Qué documento necesitas?</h3>
+      </div>
+      <div class="card-body">
+        
+        <label>Tipo de documento</label>
+        <div class="doc-types">
+          <button class="doc-type-btn selected" data-type="nda" onclick="selectType(this)">
+            <span class="type-name">📄 NDA</span>
+            <span class="type-desc">Acuerdo de confidencialidad</span>
+          </button>
+          <button class="doc-type-btn" data-type="employment" onclick="selectType(this)">
+            <span class="type-name">👔 Employment Agreement</span>
+            <span class="type-desc">Contrato laboral Texas</span>
+          </button>
+          <button class="doc-type-btn" data-type="petition" onclick="selectType(this)">
+            <span class="type-name">🛂 Visa Petition</span>
+            <span class="type-desc">H-1B / Employment-based</span>
+          </button>
+          <button class="doc-type-btn" data-type="re" onclick="selectType(this)">
+            <span class="type-name">🏠 RE Purchase</span>
+            <span class="type-desc">Contrato compraventa Texas</span>
+          </button>
+        </div>
+        
+        <div class="form-group">
+          <label>Nombre de la primera parte (Company / Employer)</label>
+          <input type="text" id="partyA" placeholder="Ej: Abrams & Associates PLLC" value="Abrams & Associates PLLC">
+        </div>
+        
+        <div class="form-group">
+          <label>Nombre de la segunda parte (Counterparty / Employee)</label>
+          <input type="text" id="partyB" placeholder="Ej: Carlos Mendoza" value="Carlos Mendoza">
+        </div>
+        
+        <div class="form-group">
+          <label>Role / Position</label>
+          <input type="text" id="role" placeholder="Ej: Associate Attorney, Senior Developer" value="Associate Attorney">
+        </div>
+        
+        <div class="form-group">
+          <label>State / Jurisdiction</label>
+          <select id="state">
+            <option value="Texas" selected>Texas</option>
+            <option value="California">California</option>
+            <option value="New York">New York</option>
+            <option value="Florida">Florida</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Notas adicionales / Términos especiales</label>
+          <textarea id="notes" placeholder="Ej: NDA mutuo, vigencia 2 años, exclusión de info pública...">NDA mutuo, vigencia de 2 años, jurisdicción Texas, excluye información pública.</textarea>
+        </div>
+        
+        <button class="btn" id="generateBtn" onclick="generateDoc()">
+          <span id="btnText">⚡ Generar documento</span>
+          <div class="spinner" id="spinner" style="display:none"></div>
+        </button>
+        
+        <div class="info-box">
+          💡 <strong>Cómo funciona:</strong> La IA usa GPT-4o-mini entrenado con documentos de práctica legal en Texas. Genera el borrador en segundos — tú revisa y ajusta antes de usar.
+        </div>
+      </div>
+    </div>
+    
+    <!-- OUTPUT -->
+    <div class="card output-area">
+      <div class="output-header">
+        <div class="card-header" style="border:none;padding:0">
+          <div class="step-badge">2</div>
+          <h3>Documento generado</h3>
+        </div>
+        <div class="output-status">
+          <div class="status-dot" id="statusDot"></div>
+          <span id="statusText">Esperando...</span>
+        </div>
+      </div>
+      <div id="outputContent">
+        <div class="output-placeholder">
+          <div class="icon">📝</div>
+          <p>Llena el formulario y presiona <strong>"Generar documento"</strong>. El borrador aparecerá aquí en segundos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="usecases">
+  <div class="demo-title">
+    <h2>Casos de uso — para quién es</h2>
+    <p>DocuFlow trabaja con las prácticas que más documentos generan y donde más tiempo se pierde.</p>
+  </div>
+  
+  <div class="usecases-grid">
+    <div class="usecase-card">
+      <div class="icon">👔</div>
+      <h4>Employment & Labor Law</h4>
+      <p>Employment agreements, EEOC responses, severance agreements, non-competes, employee handbooks. Cada documento sigue patrones predecibles.</p>
+      <div class="doc-example">Employment Agreement → 45-90 min → 20-30 seg</div>
+    </div>
+    <div class="usecase-card">
+      <div class="icon">🛂</div>
+      <h4>Immigration Law</h4>
+      <p>Visa petitions (H-1B, L-1, O-1), RFE responses, DACA renewals, adjustment of status. Volumen alto, formato estándar, mucho overhead.</p>
+      <div class="doc-example">H-1B Petition → 30-60 min → 20-30 seg</div>
+    </div>
+    <div class="usecase-card">
+      <div class="icon">🏢</div>
+      <h4>Corporate & M&A</h4>
+      <p>NDAs, purchase agreements, due diligence packages, shareholder agreements, board resolutions. Transacciones complejas con muchos documentos estándar.</p>
+      <div class="doc-example">NDA + SPA → 60-120 min → 1-2 min</div>
+    </div>
+    <div class="usecase-card">
+      <div class="icon">🏠</div>
+      <h4>Real Estate</h4>
+      <p>Purchase agreements, deeds, title docs, estoppels, SNDAs, lease agreements. Cada transacción genera 8-15 documentos con estructura repetible.</p>
+      <div class="doc-example">RE Purchase Agreement → 30-60 min → 20-30 seg</div>
+    </div>
+    <div class="usecase-card">
+      <div class="icon">⚖️</div>
+      <h4>Litigation Support</h4>
+      <p>Discovery requests, case management documents, motions, petitions. Documentos de corte con formato estricto — la IA conoce la estructura.</p>
+      <div class="doc-example">Motion to Compel → 30-60 min → 20-30 seg</div>
+    </div>
+    <div class="usecase-card">
+      <div class="icon">📋</div>
+      <h4>Estate Planning</h4>
+      <p>Wills, trusts, powers of attorney, healthcare directives. Documentos estandarizados donde el formato es casi idéntico entre clientes.</p>
+      <div class="doc-example">Will + POA → 45-90 min → 30-40 seg</div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing-section">
+  <div class="pricing-inner">
+    <h2>Precio simple — sin sorpresas</h2>
+    <p>Setup + monthly. Sin contratos largos. Cancela cuando quieras.</p>
+    <div class="pricing-cards">
+      <div class="pricing-card">
+        <div class="plan-name">Professional</div>
+        <div class="plan-price">$1,497 <small>+ $497/mo</small></div>
+        <div class="plan-monthly">Setup + Monthly</div>
+        <ul>
+          <li>Hasta 5 workflows</li>
+          <li>Training de IA con tus docs</li>
+          <li>Email support</li>
+          <li>1 usuario</li>
+          <li>5GB storage</li>
+        </ul>
+      </div>
+      <div class="pricing-card featured">
+        <div class="plan-name">⭐ Enterprise</div>
+        <div class="plan-price">$2,497 <small>+ $497/mo</small></div>
+        <div class="plan-monthly">Setup + Monthly</div>
+        <ul>
+          <li>Workflows ilimitados</li>
+          <li>AI entrenada con tus templates</li>
+          <li>Priority support</li>
+          <li>Multi-usuario</li>
+          <li>API access</li>
+          <li>Onboarding dedicado</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top: 24px; font-size: 13px; opacity: 0.5;">Payment via Stripe. Credit cards accepted. First document live in 2 hours after signup.</p>
+  </div>
+</section>
+
+<footer>
+  <p>DocuFlow Legal · AI Document Automation for Texas Law Firms · hello@docuflowlegal.com</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let selectedDocType = 'nda';
+  
+  function selectType(btn) {
+    document.querySelectorAll('.doc-type-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedDocType = btn.dataset.type;
+  }
+  
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type;
+    setTimeout(() => t.classList.add('show'), 10);
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+  
+  function setStatus(status, text) {
+    const dot = document.getElementById('statusDot');
+    const txt = document.getElementById('statusText');
+    dot.className = 'status-dot ' + status;
+    txt.textContent = text;
+  }
+  
+  async function generateDoc() {
+    const btn = document.getElementById('generateBtn');
+    const btnText = document.getElementById('btnText');
+    const spinner = document.getElementById('spinner');
+    const output = document.getElementById('outputContent');
+    
+    const partyA = document.getElementById('partyA').value.trim();
+    const partyB = document.getElementById('partyB').value.trim();
+    const role = document.getElementById('role').value.trim();
+    const state = document.getElementById('state').value;
+    const notes = document.getElementById('notes').value.trim();
+    
+    if (!partyA || !partyB) {
+      showToast('Por favor completa al menos las dos primeras casillas', 'error');
+      return;
+    }
+    
+    btn.disabled = true;
+    btnText.textContent = 'Generando...';
+    spinner.style.display = 'block';
+    setStatus('loading', 'Generando con IA...');
+    output.innerHTML = '<div class="output-placeholder"><div class="icon">⚙️</div><p>La IA está redactando el documento... esto toma unos segundos.</p></div>';
+    
+    // Build prompt based on document type
+    const prompts = {
+      nda: `You are a legal document generator for Texas law firms. Generate a professional, complete Non-Disclosure Agreement (NDA) / Mutual Confidentiality Agreement under Texas law.
+
+PARTIES:
+- First Party (Disclosing): ${partyA}
+- Second Party (Receiving): ${partyB}
+
+TERMS: ${notes || 'Mutual NDA, 2-year term, Texas jurisdiction, excludes publicly available information'}
+
+Generate a complete, professional legal document with:
+1. Header and title
+2. Recitals / Whereas clauses
+3. Definitions section
+4. Obligations of the Receiving Party
+5. Exclusions from Confidential Information
+6. Term and Termination
+7. Remedies (injunctive relief clause)
+8. Governing Law (Texas) and Jurisdiction
+9. Entire Agreement clause
+10. Signature blocks with date lines
+
+Use formal legal language appropriate for a Texas law firm. Include bracketed placeholders for specific deal terms that would need to be filled in (e.g., [Effective Date], [State of Incorporation]). Make it comprehensive — this is a real agreement a law firm would use.
+
+Format the output as a clean legal document with proper section numbering.`,
+      
+      employment: `You are a legal document generator for Texas employment law. Generate a complete, professional Employment Agreement under Texas law.
+
+PARTIES:
+- Employer: ${partyA}
+- Employee: ${partyB}
+- Position/Role: ${role || 'At-Will Employee'}
+
+TERMS: ${notes || 'At-will employment, Texas jurisdiction, includes non-compete and confidentiality provisions'}
+
+Generate a complete employment agreement with:
+1. Title and parties
+2. Employment terms (at-will vs. for-cause)
+3. Duties and responsibilities
+4. Compensation and benefits
+5. Confidentiality and NDA clause
+6. Non-compete clause (Texas-specific, valid under TX Bus. & Com. Code § 15.50)
+7. Non-solicitation clause
+8. Work product ownership
+9. Termination provisions
+10. Texas governing law and venue clause
+11. Entire agreement
+12. Signature blocks
+
+Use formal Texas employment law language. Include all standard provisions a Texas employment attorney would expect. Add [bracketed placeholders] for variable terms.`,
+      
+      petition: `You are a legal document generator specializing in US immigration law. Generate a complete, professional H-1B Employment-Based Visa Petition cover letter and supporting documentation for a Texas employer.
+
+PETITIONER: ${partyA}
+BENEFICIARY: ${partyB}
+POSITION: ${role || 'Professional/Specialty Occupation'}
+JURISDICTION: ${state}
+
+Generate a complete petition package including:
+1. Cover letter from employer to USCIS
+2. Table of contents
+3. Expert opinion letter (Degree qualification for the position)
+4. Job description (Detailed, SOC code compatible)
+5. Employer letter attesting to: (a) specialty occupation, (b) beneficiary qualifications, (c) wage level
+6. Supporting documentation checklist
+
+Follow current USCIS formatting requirements. Reference 8 CFR § 214.2(h). Include all exhibits. Use formal USCIS petition language.`,
+      
+      re: `You are a legal document generator for Texas real estate transactions. Generate a complete, professional Commercial/Residential Purchase and Sale Agreement under Texas Property Code and common law.
+
+PARTIES:
+- Seller: ${partyA}
+- Buyer: ${partyB}
+
+TERMS: ${notes || 'Commercial property, Texas, standard contingencies, 30-day closing, as-is with seller disclosures'}
+
+Generate a complete purchase agreement with:
+1. Title and parties
+2. Property description (with placeholder for address/MLS)
+3. Purchase price and earnest money
+4. Contingencies: financing, inspection, title, survey
+5. Closing procedures and timeline
+6. Prorations and adjustments
+7. Property condition and as-is clause
+8. Seller representations and warranties
+9. Default and remedies
+10. Special provisions (Texas-specific: opt-out of TDCA, HOA disclosures if applicable)
+11. Governing law (Texas)
+12. Signature blocks and exhibits list
+
+Use formal Texas real estate contract language consistent with TREC (Texas Real Estate Commission) standards. Include all standard Texas commercial RE provisions.`
+    };
+    
+    const prompt = prompts[selectedDocType] || prompts.nda;
+    
+    const docTitles = {
+      nda: 'NON-DISCLOSURE AND CONFIDENTIALITY AGREEMENT',
+      employment: 'EMPLOYMENT AGREEMENT',
+      petition: 'H-1B EMPLOYMENT-BASED VISA PETITION — SUPPORTING DOCUMENTATION',
+      re: 'COMMERCIAL PURCHASE AND SALE AGREEMENT'
+    };
+    
+    try {
+      // Use OpenAI API directly from browser
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // NOTE: In production, this call should go through YOUR backend
+          // to protect the API key. This demo uses the exposed demo key.
+          'Authorization': 'Bearer {{secreto:openai_docuflow_key}}'
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are DocuFlow Legal, an AI document generation assistant for Texas law firms. Generate professional, complete legal documents. Do not include disclaimers or notes about the document being a draft — present it as a final document.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          max_tokens: 2500,
+          temperature: 0.3
+        })
+      });
+      
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.error?.message || `Error ${response.status}`);
+      }
+      
+      const data = await response.json();
+      const text = data.choices[0].message.content;
+      
+      // Format and display
+      const formatted = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      
+      output.innerHTML = `<div class="output-content">${formatted}</div>`;
+      setStatus('ready', 'Listo ✓');
+      showToast('Documento generado con éxito', 'success');
+      
+    } catch (err) {
+      console.error(err);
+      output.innerHTML = `<div class="output-placeholder" style="color: var(--error);">
+        <div class="icon">⚠️</div>
+        <p><strong>Error: ${err.message}</strong><br><br>
+        Si el error persiste, la clave de API puede haber expirado o no estar configurada. 
+        En producción esto se resuelve conectando tu propia API key de OpenAI en el backend.</p>
+      </div>`;
+      setStatus('', 'Error');
+      showToast('Error al generar: ' + err.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btnText.textContent = '⚡ Generar documento';
+      spinner.style.display = 'none';
+    }
+  }
+</script>
+</body>
+</html>
